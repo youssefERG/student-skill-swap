@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Find a skill — StudentSkillSwap{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <p class="eyebrow">FIND YOUR LEARNING PARTNER</p>
+  <h1>Choose a skill to learn</h1>
+  <p>Search the fixed list of programming and IT skills offered by students.</p>
+</section>
+
+<section class="search-panel">
+  <form method="post" action="{{ url_for('search') }}" class="search-form">
+    <label for="skill">Programming or IT skill</label>
+    <div class="search-row">
+      <select id="skill" name="skill" required>
+        <option value="" disabled {% if not skill %}selected{% endif %}>Choose a skill…</option>
+        {% for option in all_skills %}
+          <option value="{{ option }}" {% if skill == option %}selected{% endif %}>
+            {{ option }}
+          </option>
+        {% endfor %}
+      </select>
+      <button class="button button-dark" type="submit">Find students</button>
+    </div>
+  </form>
+</section>
+
+{% if skill %}
+  <section class="results-section">
+    <h2>Students who can teach {{ skill }}</h2>
+
+    {% if results %}
+      <div class="student-grid">
+        {% for student in results %}
+          <article class="student-card">
+            <div class="student-avatar" aria-hidden="true">{{ student.name[0]|upper }}</div>
+            <h3>{{ student.name }}</h3>
+            <p class="skill-label">Can teach <strong>{{ student.matching_skills }}</strong></p>
+
+            {% if student.bio %}
+              <p class="student-bio">{{ student.bio }}</p>
+            {% else %}
+              <p class="student-bio muted">This student hasn’t added a bio yet.</p>
+            {% endif %}
+
+            <form
+              method="post"
+              action="{{ url_for('send_request', user_id=student.id) }}"
+              class="request-form"
+            >
+              <label for="message-{{ student.id }}">Add a short note (optional)</label>
+              <textarea
+                id="message-{{ student.id }}"
+                name="message"
+                rows="2"
+                maxlength="500"
+                placeholder="What would you like to learn?"
+              ></textarea>
+              <button class="button button-dark button-full" type="submit">
+                Send exchange request
+              </button>
+            </form>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h3>No students found yet</h3>
+        <p>Try another skill, or choose skills on your profile so students can find you.</p>
+        <a class="button button-outline" href="{{ url_for('profile') }}">Update my profile</a>
+      </div>
+    {% endif %}
+  </section>
+{% endif %}
+{% endblock %}

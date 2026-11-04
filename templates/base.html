@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Exchange programming and IT knowledge with other students.">
+  <title>{% block title %}StudentSkillSwap{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>StudentSkillSwap</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('search') }}">Find a skill</a>
+        <a href="{{ url_for('requests_page') }}">Requests</a>
+        <a href="{{ url_for('messages') }}">Messages</a>
+        <a href="{{ url_for('profile') }}">My profile</a>
+        <form action="{{ url_for('logout') }}" method="post" class="nav-form">
+          <button class="button button-small button-outline" type="submit">Log out</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('home') }}#how-it-works">How it works</a>
+        <a href="{{ url_for('login') }}">Log in</a>
+        <a class="button button-small button-dark" href="{{ url_for('register') }}">Join free</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    <div class="flash-area" aria-live="polite">
+      {% for message in get_flashed_messages() %}
+        <p class="flash-message">{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand brand-footer" href="{{ url_for('home') }}">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>StudentSkillSwap</span>
+    </a>
+    <p>Exchange knowledge with other students.</p>
+    <span>© 2026 StudentSkillSwap</span>
+  </footer>
+</body>
+</html>

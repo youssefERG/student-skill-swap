@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}StudentSkillSwap — Exchange knowledge{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="eyebrow-dot"></span> PROGRAMMING KNOWLEDGE, SHARED</p>
+    <h1>Exchange knowledge<br><span>with others.</span></h1>
+    <p class="hero-description">
+      Teach a programming skill you know and learn one from another student.
+      Find your next coding partner and grow together.
+    </p>
+
+    <div class="hero-actions">
+      {% if session.get('user_id') %}
+        <a class="button button-dark" href="{{ url_for('search') }}">
+          Find a skill swap <span aria-hidden="true">→</span>
+        </a>
+      {% else %}
+        <a class="button button-dark" href="{{ url_for('register') }}">
+          Join the community <span aria-hidden="true">→</span>
+        </a>
+      {% endif %}
+      <p>Free for students <span aria-hidden="true">·</span> Focused on programming and IT</p>
+    </div>
+  </div>
+
+  <div class="exchange-diagram">
+    <p class="diagram-label">A SIMPLE SKILL EXCHANGE</p>
+    <div class="diagram-row">
+      <article class="code-card">
+        <span class="code-card-label">I CAN TEACH</span>
+        <span class="code-icon python-icon" aria-hidden="true">Py</span>
+        <h2>Python</h2>
+        <p>Sam shares Python basics</p>
+        <pre aria-hidden="true"><code>print("Hello!")</code></pre>
+      </article>
+
+      <div class="exchange-arrow" aria-label="in exchange for">
+        <span aria-hidden="true">⇄</span>
+        <small>EXCHANGE</small>
+      </div>
+
+      <article class="code-card">
+        <span class="code-card-label">I WANT TO LEARN</span>
+        <span class="code-icon javascript-icon" aria-hidden="true">JS</span>
+        <h2>JavaScript</h2>
+        <p>Alex shares JavaScript basics</p>
+        <pre aria-hidden="true"><code>console.log("Hi!")</code></pre>
+      </article>
+    </div>
+    <p class="diagram-caption">Two students. Two skills. A fair exchange.</p>
+  </div>
+</section>
+
+<section class="how-section" id="how-it-works">
+  <div class="section-heading">
+    <p class="eyebrow">HOW IT WORKS</p>
+    <h2>Learn by sharing what you know.</h2>
+    <p>Choose from programming and IT skills, then connect with another student.</p>
+  </div>
+
+  <div class="steps">
+    <article class="step">
+      <span class="step-number">01</span>
+      <div class="step-icon" aria-hidden="true">01</div>
+      <h3>Choose your skills</h3>
+      <p>Select skills you can teach and skills you want to learn.</p>
+    </article>
+    <article class="step">
+      <span class="step-number">02</span>
+      <div class="step-icon step-icon-peach" aria-hidden="true">02</div>
+      <h3>Find a student</h3>
+      <p>Search the set list of programming and IT skills.</p>
+    </article>
+    <article class="step">
+      <span class="step-number">03</span>
+      <div class="step-icon step-icon-blue" aria-hidden="true">03</div>
+      <h3>Exchange knowledge</h3>
+      <p>Send a request, agree to swap, and message your partner.</p>
+    </article>
+  </div>
+</section>
+
+<section class="closing">
+  <p>YOUR NEXT CODING PARTNER IS ONE SKILL AWAY.</p>
+  {% if session.get('user_id') %}
+    <a class="button button-light" href="{{ url_for('search') }}">
+      Find a student <span aria-hidden="true">→</span>
+    </a>
+  {% else %}
+    <a class="button button-light" href="{{ url_for('register') }}">
+      Create an account <span aria-hidden="true">→</span>
+    </a>
+  {% endif %}
+</section>
+{% endblock %}

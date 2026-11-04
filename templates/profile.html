@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}My profile — StudentSkillSwap{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <p class="eyebrow">YOUR PROGRAMMING PROFILE</p>
+  <h1>My profile</h1>
+  <p>Select skills from the list so other students can find a useful exchange match.</p>
+</section>
+
+<section class="form-card profile-card">
+  <form method="post" class="stacked-form">
+    <label for="name">Your name</label>
+    <input id="name" name="name" type="text" maxlength="80" value="{{ user.name }}" required>
+
+    <label for="bio">Short bio</label>
+    <textarea id="bio" name="bio" rows="4" maxlength="500" placeholder="What are you studying or building?">{{ user.bio }}</textarea>
+    <p class="field-help">Up to 500 characters.</p>
+
+    <fieldset class="skill-fieldset">
+      <legend>Skills I can teach</legend>
+      <p class="field-help">Select every skill you feel comfortable sharing.</p>
+      {% for group_name, skills in catalog %}
+        <div class="skill-group">
+          <h2>{{ group_name }}</h2>
+          <div class="skill-options">
+            {% for skill in skills %}
+              <label class="skill-option">
+                <input
+                  type="checkbox"
+                  name="offers"
+                  value="{{ skill.id }}"
+                  {% if skill.id in selected_offers %}checked{% endif %}
+                >
+                <span>{{ skill.name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset class="skill-fieldset">
+      <legend>Skills I want to learn</legend>
+      <p class="field-help">Select the programming or IT skills you want to learn next.</p>
+      {% for group_name, skills in catalog %}
+        <div class="skill-group">
+          <h2>{{ group_name }}</h2>
+          <div class="skill-options">
+            {% for skill in skills %}
+              <label class="skill-option">
+                <input
+                  type="checkbox"
+                  name="wants"
+                  value="{{ skill.id }}"
+                  {% if skill.id in selected_wants %}checked{% endif %}
+                >
+                <span>{{ skill.name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <button class="button button-dark" type="submit">Save profile</button>
+  </form>
+</section>
+{% endblock %}

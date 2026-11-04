@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if active %}Chat with {{ active.other_name }}{% else %}Messages{% endif %} — StudentSkillSwap
+{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <p class="eyebrow">LEARN TOGETHER</p>
+  <h1>{% if active %}Conversation{% else %}Messages{% endif %}</h1>
+  <p>Private messages are available after an exchange request is accepted.</p>
+</section>
+
+{% if active %}
+  <section class="conversation-panel">
+    <div class="conversation-header">
+      <div>
+        <h2>{{ active.other_name }}</h2>
+        <p>Skill exchange conversation</p>
+      </div>
+      <a class="button button-outline" href="{{ url_for('messages') }}">All messages</a>
+    </div>
+
+    <div class="message-list" aria-live="polite">
+      {% if messages %}
+        {% for message in messages %}
+          <article class="message {% if message.sender_id == user_id %}message-own{% else %}message-other{% endif %}">
+            <p class="message-meta">
+              {% if message.sender_id == user_id %}You{% else %}{{ message.sender_name }}{% endif %}
+              <span>{{ message.created_at }}</span>
+            </p>
+            <p class="message-body">{{ message.body }}</p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <p>No messages yet. Say hello and start planning your exchange.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <form method="post" class="send-message-form">
+      <label for="body">Your message</label>
+      <div class="search-row">
+        <input id="body" name="body" type="text" maxlength="2000" placeholder="Write a message…" required>
+        <button class="button button-dark" type="submit">Send</button>
+      </div>
+    </form>
+  </section>
+{% else %}
+  <section class="conversation-list">
+    {% if conversations %}
+      {% for item in conversations %}
+        <a class="conversation-link" href="{{ url_for('conversation', conversation_id=item.conversation_id) }}">
+          <span class="student-avatar" aria-hidden="true">{{ item.other_name[0]|upper }}</span>
+          <span><strong>{{ item.other_name }}</strong><small>Open conversation</small></span>
+          <span class="conversation-arrow" aria-hidden="true">→</span>
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <h2>No conversations yet</h2>
+        <p>When a student accepts an exchange request, your conversation will appear here.</p>
+        <a class="button button-dark" href="{{ url_for('search') }}">Find students</a>
+      </div>
+    {% endif %}
+  </section>
+{% endif %}
+{% endblock %}
