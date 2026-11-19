@@ -43,6 +43,8 @@ def register_message_routes(app):
             conversations=conversations,
             active=None,
             messages=[],
+            message_count=0,
+            my_review=None,
             user_id=session["user_id"],
         )
 
@@ -53,6 +55,7 @@ def register_message_routes(app):
         active = database.execute(
             """
             SELECT conversations.id,
+                   exchange_requests.id AS request_id,
                    exchange_requests.sender_id,
                    exchange_requests.receiver_id,
                    CASE
@@ -110,10 +113,26 @@ def register_message_routes(app):
             (conversation_id,),
         ).fetchall()
 
+        message_count = database.execute(
+            "SELECT COUNT(*) AS total FROM messages WHERE conversation_id = ?",
+            (conversation_id,),
+        ).fetchone()["total"]
+
+        my_review = database.execute(
+            """
+            SELECT rating, comment, message_count, created_at
+            FROM reviews
+            WHERE request_id = ? AND reviewer_id = ?
+            """,
+            (active["request_id"], session["user_id"]),
+        ).fetchone()
+
         return render_template(
             "messages.html",
             conversations=[],
             active=active,
             messages=message_rows,
+            message_count=message_count,
+            my_review=my_review,
             user_id=session["user_id"],
         )

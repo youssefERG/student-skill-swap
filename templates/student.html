@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if is_own_profile %}My profile{% else %}{{ student.name }}{% endif %} — StudentSkillSwap
+{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <p class="eyebrow">STUDENT PROFILE</p>
+
+  {% if is_own_profile %}
+    <h1>My profile</h1>
+  {% else %}
+    <h1>{{ student.name }}</h1>
+  {% endif %}
+
+  {% if student.bio %}
+    <p>{{ student.bio }}</p>
+  {% else %}
+    <p>No biography has been added yet.</p>
+  {% endif %}
+</section>
+
+<section class="student-grid profile-details">
+  <article class="student-card">
+    <h2>Skills this student can teach</h2>
+    {% if offers %}
+      <ul>
+        {% for skill in offers %}
+          <li>{{ skill.name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No offered skills listed yet.</p>
+    {% endif %}
+  </article>
+
+  <article class="student-card">
+    <h2>Skills this student wants to learn</h2>
+    {% if wants %}
+      <ul>
+        {% for skill in wants %}
+          <li>{{ skill.name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No wanted skills listed yet.</p>
+    {% endif %}
+  </article>
+</section>
+
+<section class="results-section">
+  <h2>Comments and ratings</h2>
+
+  {% if reviews %}
+    <div class="card-list">
+      {% for review in reviews %}
+        <article class="request-card">
+          <div class="request-card-top">
+            <h3>{{ review.reviewer_name }}</h3>
+            <strong>{{ review.rating }} / 5 stars</strong>
+          </div>
+
+          <p aria-label="{{ review.rating }} out of 5 stars">
+            {% for star in range(1, 6) %}
+              {% if star <= review.rating %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </p>
+
+          <p>{{ review.comment }}</p>
+          <p class="field-help">
+            Based on {{ review.message_count }} message{% if review.message_count != 1 %}s{% endif %}
+            in that exchange · {{ review.created_at }}
+          </p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>This student does not have any comments yet.</p>
+    </div>
+  {% endif %}
+</section>
+
+{% if is_own_profile %}
+  <section class="closing">
+    <a class="button button-light" href="{{ url_for('profile_edit') }}">
+      Update profile
+    </a>
+  </section>
+{% endif %}
+{% endblock %}

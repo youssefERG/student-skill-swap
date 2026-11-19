@@ -85,6 +85,25 @@ def init_db():
                 REFERENCES conversations(id) ON DELETE CASCADE,
             FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
         );
+
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            request_id INTEGER NOT NULL,
+            reviewer_id INTEGER NOT NULL,
+            reviewed_user_id INTEGER NOT NULL,
+            rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+            comment TEXT NOT NULL,
+            message_count INTEGER NOT NULL CHECK (message_count >= 0),
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (request_id, reviewer_id),
+            CHECK (reviewer_id != reviewed_user_id),
+            FOREIGN KEY (request_id)
+                REFERENCES exchange_requests(id) ON DELETE CASCADE,
+            FOREIGN KEY (reviewer_id)
+                REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (reviewed_user_id)
+                REFERENCES users(id) ON DELETE CASCADE
+        );
         """
     )
 

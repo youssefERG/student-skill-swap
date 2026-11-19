@@ -16,7 +16,10 @@
     <div class="conversation-header">
       <div>
         <h2>{{ active.other_name }}</h2>
-        <p>Skill exchange conversation</p>
+        <p>
+          You have shared {{ message_count }} message{% if message_count != 1 %}s{% endif %}
+          in this exchange.
+        </p>
       </div>
       <a class="button button-outline" href="{{ url_for('messages') }}">All messages</a>
     </div>
@@ -46,6 +49,51 @@
         <button class="button button-dark" type="submit">Send</button>
       </div>
     </form>
+  </section>
+
+  <section class="form-card profile-card">
+    <h2>Rate this exchange</h2>
+    <p>
+      Your review will appear on {{ active.other_name }}’s profile with the number
+      of messages you shared when you submitted it.
+    </p>
+
+    {% if my_review %}
+      <p><strong>Your rating:</strong> {{ my_review.rating }} / 5 stars</p>
+      <p>{{ my_review.comment }}</p>
+      <p class="field-help">
+        Based on {{ my_review.message_count }} message{% if my_review.message_count != 1 %}s{% endif %}
+        in this exchange.
+      </p>
+    {% else %}
+      <form
+        method="post"
+        action="{{ url_for('submit_review', request_id=active.request_id) }}"
+        class="stacked-form"
+      >
+        <label for="rating">Your rating</label>
+        <select id="rating" name="rating" required>
+          <option value="" disabled selected>Choose a rating…</option>
+          <option value="5">5 stars — Excellent</option>
+          <option value="4">4 stars — Very good</option>
+          <option value="3">3 stars — Good</option>
+          <option value="2">2 stars — Could be better</option>
+          <option value="1">1 star — Poor</option>
+        </select>
+
+        <label for="comment">Your comment</label>
+        <textarea
+          id="comment"
+          name="comment"
+          rows="4"
+          maxlength="1000"
+          placeholder="Describe your experience with this exchange…"
+          required
+        ></textarea>
+
+        <button class="button button-dark" type="submit">Post rating and comment</button>
+      </form>
+    {% endif %}
   </section>
 {% else %}
   <section class="conversation-list">

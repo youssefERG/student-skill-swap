@@ -8,6 +8,7 @@ from .exchange_requests import register_exchange_request_routes
 from .home import register_home_routes
 from .messages import register_message_routes
 from .profiles import register_profile_routes
+from .reviews import register_review_routes
 from .search import register_search_routes
 
 
@@ -33,5 +34,6 @@ def create_app():
     register_search_routes(app)
     register_exchange_request_routes(app)
     register_message_routes(app)
+    register_review_routes(app)
 
     return app
